@@ -13,25 +13,28 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="services")
-public class Servicio implements Serializable{
+public class Services implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "healthcenter_id")
 	HealthCenter healthCenter;
 	
 	private String name;
+	
+	private String status;
+	
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -50,6 +53,14 @@ public class Servicio implements Serializable{
 
 	public void setHealthCenter(HealthCenter healthCenter) {
 		this.healthCenter = healthCenter;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 

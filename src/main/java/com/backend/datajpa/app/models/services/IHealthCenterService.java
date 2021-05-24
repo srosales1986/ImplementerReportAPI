@@ -1,10 +1,11 @@
 package com.backend.datajpa.app.models.services;
 
 import java.util.List;
-import java.util.Map;
+
+import com.backend.datajpa.app.models.dto.ReportDto;
 
 
 public interface IHealthCenterService {
 
-	public List<Map<String,String>> getHealthCenterListToReport (String healthCentersId);
+	public List<ReportDto> getHealthCenterListToReport (String healthCentersId);
 }

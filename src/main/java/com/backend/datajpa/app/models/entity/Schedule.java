@@ -55,7 +55,7 @@ public class Schedule implements Serializable {
 	
 	@ManyToOne()
 	@JoinColumn(name = "service_id", insertable = false, updatable = false)
-	Servicio service;
+	Services service;
 
 	public Long getId() {
 		return id;
@@ -106,11 +106,11 @@ public class Schedule implements Serializable {
 		this.scheduleDateTo = scheduleDateTo;
 	}
 
-	public Servicio getService() {
+	public Services getService() {
 		return service;
 	}
 
-	public void setService(Servicio service) {
+	public void setService(Services service) {
 		this.service = service;
 	}
 	

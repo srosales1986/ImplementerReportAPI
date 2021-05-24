@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.backend.datajpa.app.models.entity.Servicio;
+import com.backend.datajpa.app.models.entity.Services;
 
-public interface IServiceDao extends CrudRepository<Servicio, Long> {
+public interface IServiceDao extends CrudRepository<Services, Long> {
 	
-	public List<Servicio> findAllByHealthCenterIdOrderById(Long id);
+	public List<Services> findAllByHealthCenterIdOrderById(Long id);
  
 }

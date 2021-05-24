@@ -8,7 +8,7 @@ public class ReportDto implements Serializable,Comparable<ReportDto> {
 	private static final long serialVersionUID = 1L;
 	
 	private String healthCenterId;
-	private String healthCenter;
+	private String healthCenterName;
 	private String assigned = "0";
 	private String signed = "0";
 	private String signLater = "0";
@@ -35,11 +35,11 @@ public class ReportDto implements Serializable,Comparable<ReportDto> {
 	public void setOrderShow(Integer orderShow) {
 		this.orderShow = orderShow;
 	}
-	public String getHealthCenter() {
-		return healthCenter;
+	public String getHealthCenterName() {
+		return healthCenterName;
 	}
-	public void setHealthCenter(String healthCenter) {
-		this.healthCenter = healthCenter;
+	public void setHealthCenterName(String healthCenter) {
+		this.healthCenterName = healthCenter;
 	}
 	public String getAssigned() {
 		return assigned;

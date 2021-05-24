@@ -20,4 +20,9 @@ public class PersonController {
 	public Person getPersonByDocNumber(@PathVariable String docNumber) {
 		return personService.findByDocNumber(docNumber).get();
 	}
+	
+	@GetMapping("/person/operator/{operatorId}")
+	public Person getPersonByOperatorId(@PathVariable Integer operatorId) {
+		return personService.findByOperatorId(operatorId).get();
+	}
 }

@@ -31,7 +31,9 @@ public class ScheduleServiceImpl implements IScheduleService {
 	@Transactional(readOnly = true)
 	@SuppressWarnings("unchecked")
 	public List<ReportDto> reportAssignedAppointments(String dateFrom, String dateTo, String healthCenters){
+		
 		result.clear();
+		
 		String jpql = 
 		"SELECT s.service.healthCenter.id, s.service.healthCenter.name, COUNT(s.id) "
 		+ "FROM Schedule s "

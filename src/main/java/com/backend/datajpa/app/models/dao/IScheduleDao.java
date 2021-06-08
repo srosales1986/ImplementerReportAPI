@@ -1,13 +1,12 @@
 package com.backend.datajpa.app.models.dao;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
+import com.backend.datajpa.app.models.dto.ScheduleReportDto;
 
-import com.backend.datajpa.app.models.dto.ReportDto;
-import com.backend.datajpa.app.models.entity.Schedule;
-
+@Component
 public interface IScheduleDao {
 	
-	public List<Schedule> report(ReportDto report);
+	public ScheduleReportDto getSchedulesByDocNumber (String dateFrom, String dateTo, Long healthCenterId, String docNumber, String sex);
 	
 	
 }

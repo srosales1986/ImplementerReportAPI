@@ -1,5 +1,7 @@
 package com.backend.datajpa.app.models.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="services")
+@Data
 public class Services implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -24,46 +27,9 @@ public class Services implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "healthcenter_id")
 	HealthCenter healthCenter;
-	
+
 	private String name;
-	
+
 	private String status;
-	
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public HealthCenter getHealthCenter() {
-		return healthCenter;
-	}
-
-	public void setHealthCenter(HealthCenter healthCenter) {
-		this.healthCenter = healthCenter;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-
-	
 
 }

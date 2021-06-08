@@ -8,6 +8,6 @@ import com.backend.datajpa.app.models.entity.Person;
 
 public interface IPersonDao extends CrudRepository<Person, Integer> {
 	
-	public Optional<Person> findByDocNumber(String docNumber);
+	public Optional<Person> findByDocNumberAndSex(String docNumber, String sex);
 
 }

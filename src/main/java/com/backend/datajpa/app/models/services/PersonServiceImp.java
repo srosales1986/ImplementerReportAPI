@@ -21,9 +21,9 @@ public class PersonServiceImp implements IPersonService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Person> findByDocNumber(String docNumber) {
+	public Optional<Person> findByDocNumberAndSex(String docNumber, String sex) {
 
-		return personDao.findByDocNumber(docNumber);
+		return personDao.findByDocNumberAndSex(docNumber, sex);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import com.backend.datajpa.app.models.entity.Person;
 
 public interface IPersonService {
 	
-	public Optional<Person> findByDocNumber(String docNumber);
+	public Optional<Person> findByDocNumberAndSex(String docNumber, String sex);
 	
 	public Optional<Person> findByOperatorId(Integer operatorId);
 }

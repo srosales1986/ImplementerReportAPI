@@ -16,9 +16,9 @@ public class PersonController {
 	@Autowired
 	private IPersonService personService;
 	
-	@GetMapping("/person/{docNumber}")
-	public Person getPersonByDocNumber(@PathVariable String docNumber) {
-		return personService.findByDocNumber(docNumber).get();
+	@GetMapping("/person/{docNumber}/{sex}")
+	public Person getPersonByDocNumber(@PathVariable String docNumber,@PathVariable String sex) {
+		return personService.findByDocNumberAndSex(docNumber, sex).get();
 	}
 	
 	@GetMapping("/person/operator/{operatorId}")

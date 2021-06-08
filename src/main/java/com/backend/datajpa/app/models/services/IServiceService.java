@@ -1,15 +1,12 @@
-package com.backend.datajpa.app.models.dao;
-
+package com.backend.datajpa.app.models.services;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
 import com.backend.datajpa.app.models.dto.ServiceDto;
 
-@Component
-public interface IServiceDao{
+
+public interface IServiceService {
 	
 	public List<ServiceDto> findAllByHealthCenterId(Long id);
- 
+
 }

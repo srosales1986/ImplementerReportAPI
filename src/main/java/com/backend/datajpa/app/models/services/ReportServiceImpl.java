@@ -3,6 +3,8 @@ package com.backend.datajpa.app.models.services;
 
 
 import java.util.List;
+
+import com.backend.datajpa.app.models.dto.DailyReportRequestArgumentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.backend.datajpa.app.models.dao.IReportDao;
@@ -15,9 +17,9 @@ public class ReportServiceImpl implements IReportService {
 	private IReportDao reportDao;
 
 	@Override
-	public List<ReportDto> generateDateRangeReport(String dateFrom, String dateTo, String healthCenters) {
+	public List<ReportDto> generateDateRangeReport(DailyReportRequestArgumentDto requestArgs) {
 		// TODO Auto-generated method stub
-		return reportDao.getReportByDateRange(dateFrom, dateTo, healthCenters);
+		return reportDao.getReportByDateRange(requestArgs);
 	}
 
 }

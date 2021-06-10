@@ -2,14 +2,13 @@ package com.backend.datajpa.app.models.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import com.backend.datajpa.app.http_errors.PersonNotFoundException;
-import net.bytebuddy.implementation.bytecode.Throw;
+import com.backend.datajpa.app.models.dto.DailyReportRequestArgumentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +29,7 @@ public class ScheduleDaoImpl implements IScheduleDao {
 
 	@Override
 	@Transactional(readOnly = true)
-	public ScheduleReportDto getSchedulesByDocNumber(String dateFrom, String dateTo, Long healthCenterId,
-			String docNumber, String sex) {
+	public ScheduleReportDto getSchedulesByDocNumber(DailyReportRequestArgumentDto requestArgs, String docNumber, String sex) {
 		
 		final Person patient = personService.findByDocNumberAndSex(docNumber, sex)
 				.orElseThrow(()-> new PersonNotFoundException("No se encontró la persona"));
@@ -46,13 +44,13 @@ public class ScheduleDaoImpl implements IScheduleDao {
 		jpql.append("sch.status ");
 		jpql.append("FROM Schedule sch ");
 		jpql.append("WHERE sch.scheduledDateFrom BETWEEN '");
-		jpql.append(dateFrom);
+		jpql.append(requestArgs.getDateFrom());
 		jpql.append("' AND '");
-		jpql.append(dateTo);
+		jpql.append(requestArgs.getDateTo());
 		jpql.append("' AND sch.person.docNumber = '");
 		jpql.append(docNumber);
 		jpql.append("' AND sch.service.healthCenter.id = ");
-		jpql.append(healthCenterId);
+		jpql.append(requestArgs.getHealthCenters());
 		
 		
 		Query query = em.createQuery(jpql.toString());

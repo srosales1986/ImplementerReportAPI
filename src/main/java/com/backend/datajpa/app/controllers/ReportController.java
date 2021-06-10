@@ -1,6 +1,9 @@
 package com.backend.datajpa.app.controllers;
 
+import java.time.DayOfWeek;
 import java.util.List;
+
+import com.backend.datajpa.app.models.dto.DailyReportRequestArgumentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,17 +26,28 @@ public class ReportController {
 	private IScheduleService scheduleService;
 
 	@GetMapping(value = "/report/{dateFrom}/{dateTo}/{healthCenters}")
-	public List<ReportDto> getHealthCenterList(@PathVariable String healthCenters, @PathVariable String dateFrom,
+	public List<ReportDto> getHealthCenterList(
+			@PathVariable String healthCenters,
+			@PathVariable String dateFrom,
 			@PathVariable String dateTo) {
 
-		return reportService.generateDateRangeReport(dateFrom, dateTo, healthCenters);
+		DailyReportRequestArgumentDto RequestArguments;
+		RequestArguments = new DailyReportRequestArgumentDto(dateFrom,dateTo,healthCenters);
+
+		return reportService.generateDateRangeReport(RequestArguments);
 	}
 
 	@GetMapping(value = "/report/schedules/person/{dateFrom}/{dateTo}/{healthCenterId}/{docNumber}/{sex}")
-	public ScheduleReportDto getSchedulesByDocNumber(@PathVariable String dateFrom, @PathVariable String dateTo,
-			@PathVariable String healthCenterId, @PathVariable String docNumber, @PathVariable String sex) {
-		
-		return scheduleService.getSchedulesByDocNumber(dateFrom, dateTo, Long.valueOf(healthCenterId), docNumber, sex);
+	public ScheduleReportDto getSchedulesByDocNumber(
+			@PathVariable String dateFrom,
+			@PathVariable String dateTo,
+			@PathVariable String healthCenterId,
+			@PathVariable String docNumber, @PathVariable String sex) {
+
+		DailyReportRequestArgumentDto requestArguments;
+		requestArguments = new DailyReportRequestArgumentDto(dateFrom,dateTo,healthCenterId);
+
+		return scheduleService.getSchedulesByDocNumber(requestArguments, docNumber, sex);
 
 	}
 

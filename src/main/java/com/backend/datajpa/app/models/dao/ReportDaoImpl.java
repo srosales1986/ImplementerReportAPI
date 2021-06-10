@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import net.bytebuddy.dynamic.DynamicType;
+import com.backend.datajpa.app.models.dto.DailyReportRequestArgumentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +26,15 @@ public class ReportDaoImpl implements IReportDao {
 
 
     @Override
-    public List<ReportDto> getReportByDateRange(String dateFrom, String dateTo, String healthCenters) {
+    public List<ReportDto> getReportByDateRange(DailyReportRequestArgumentDto requestArgs) {
 
         List<ReportDto> responseDtoList = new ArrayList<>();
-        responseDtoList = healthCenterService.getHealthCenterListToReport(healthCenters);
+        responseDtoList = healthCenterService.getHealthCenterListToReport(requestArgs.getHealthCenters());
 
-        getAssignedAppointmentsByHealthCenter(dateFrom, dateTo, healthCenters, responseDtoList);
-        getSignedAppointmentsByHealthCenter(dateFrom, dateTo, healthCenters, responseDtoList);
-        getSignLaterAppointmentsByHealthCenter(dateFrom, dateTo, healthCenters, responseDtoList);
-        getCanceledAppointmentsByHealthCenter(dateFrom, dateTo, healthCenters, responseDtoList);
+        getAssignedAppointmentsByHealthCenter(requestArgs, responseDtoList);
+        getSignedAppointmentsByHealthCenter(requestArgs, responseDtoList);
+        getSignLaterAppointmentsByHealthCenter(requestArgs, responseDtoList);
+        getCanceledAppointmentsByHealthCenter(requestArgs, responseDtoList);
 
         setOrderShow(responseDtoList);
         Collections.sort(responseDtoList);
@@ -45,10 +45,9 @@ public class ReportDaoImpl implements IReportDao {
     @Override
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<ReportDto> getAssignedAppointmentsByHealthCenter(String dateFrom, String dateTo, String healthCenters,
-                                                                 List<ReportDto> responseList) {
+    public List<ReportDto> getAssignedAppointmentsByHealthCenter(DailyReportRequestArgumentDto requestArgs, List<ReportDto> responseList) {
 
-        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(dateFrom, dateTo, healthCenters, "BAJ").get();
+        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(requestArgs, "BAJ").get();
 
         Query query = em.createQuery(jpql.toString());
 
@@ -71,10 +70,9 @@ public class ReportDaoImpl implements IReportDao {
     @Override
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<ReportDto> getSignedAppointmentsByHealthCenter(String dateFrom, String dateTo, String healthCenters,
-                                                               List<ReportDto> responseList) {
+    public List<ReportDto> getSignedAppointmentsByHealthCenter(DailyReportRequestArgumentDto requestArgs, List<ReportDto> responseList) {
 
-        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(dateFrom, dateTo, healthCenters, "FIN").get();
+        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(requestArgs, "FIN").get();
 
         Query query = em.createQuery(jpql.toString());
 
@@ -98,10 +96,9 @@ public class ReportDaoImpl implements IReportDao {
     @Override
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<ReportDto> getSignLaterAppointmentsByHealthCenter(String dateFrom, String dateTo, String healthCenters,
-                                                                  List<ReportDto> responseList) {
+    public List<ReportDto> getSignLaterAppointmentsByHealthCenter(DailyReportRequestArgumentDto requestArgs, List<ReportDto> responseList) {
 
-        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(dateFrom, dateTo, healthCenters, "SIGN_LATER").get();
+        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(requestArgs, "SIGN_LATER").get();
 
         Query query = em.createQuery(jpql.toString());
 
@@ -123,10 +120,9 @@ public class ReportDaoImpl implements IReportDao {
     @Override
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
-    public List<ReportDto> getCanceledAppointmentsByHealthCenter(String dateFrom, String dateTo, String healthCenters,
-                                                                 List<ReportDto> responseList) {
+    public List<ReportDto> getCanceledAppointmentsByHealthCenter(DailyReportRequestArgumentDto requestArgs, List<ReportDto> responseList) {
 
-        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(dateFrom, dateTo, healthCenters, "CAN").get();
+        StringBuilder jpql = queryAppointmentsByStatusAndDateRange(requestArgs, "CAN").get();
 
         Query query = em.createQuery(jpql.toString());
 
@@ -213,7 +209,7 @@ public class ReportDaoImpl implements IReportDao {
         }
     }
 
-    private Optional<StringBuilder> queryAppointmentsByStatusAndDateRange(String dateFrom, String dateTo, String healthCenters, String status) {
+    private Optional<StringBuilder> queryAppointmentsByStatusAndDateRange(DailyReportRequestArgumentDto requestArgs, String status) {
 
         StringBuilder jpql = new StringBuilder();
         Optional<StringBuilder> optionalJpql = Optional.of(jpql);
@@ -223,7 +219,7 @@ public class ReportDaoImpl implements IReportDao {
             jpql.append("SELECT s.service.healthCenter.id, s.service.healthCenter.name, COUNT(s.id) ");
             jpql.append("FROM Schedule s ");
             jpql.append("WHERE s.service.healthCenter.id IN (");
-            jpql.append(healthCenters);
+            jpql.append(requestArgs.getHealthCenters());
             jpql.append(") AND s.service.name != 'PRUEBA NO TOCAR' ");
 
             if (status.equals("BAJ")) {
@@ -235,9 +231,9 @@ public class ReportDaoImpl implements IReportDao {
             }
 
             jpql.append("AND s.scheduledDateFrom BETWEEN '");
-            jpql.append(dateFrom);
+            jpql.append(requestArgs.getDateFrom());
             jpql.append("' AND '");
-            jpql.append(dateTo);
+            jpql.append(requestArgs.getDateTo());
             jpql.append(" 23:59:59' ");
             jpql.append("GROUP BY s.service.healthCenter.id,s.service.healthCenter.name ");
             jpql.append("ORDER BY s.service.healthCenter.id");
@@ -247,14 +243,14 @@ public class ReportDaoImpl implements IReportDao {
                     "SELECT c.schedule.service.healthCenter.id, c.schedule.service.healthCenter.name, COUNT(c.schedule.id) ");
             jpql.append("FROM Consultation c ");
             jpql.append("WHERE c.schedule.service.healthCenter.id IN (");
-            jpql.append(healthCenters);
+            jpql.append(requestArgs.getHealthCenters());
             jpql.append(") AND c.schedule.service.name != 'PRUEBA NO TOCAR' ");
             jpql.append("AND c.status = '");
             jpql.append(status);
             jpql.append("' AND c.schedule.scheduledDateFrom BETWEEN '");
-            jpql.append(dateFrom);
+            jpql.append(requestArgs.getDateFrom());
             jpql.append("' AND '");
-            jpql.append(dateTo);
+            jpql.append(requestArgs.getDateTo());
             jpql.append(" 23:59:59' ");
             jpql.append("GROUP BY c.schedule.service.healthCenter.id,c.schedule.service.healthCenter.name ");
             jpql.append("ORDER BY c.schedule.service.healthCenter.id");
